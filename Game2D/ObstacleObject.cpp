@@ -13,7 +13,7 @@ ObstacleObject::ObstacleObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite)
 		glm::vec2(0.8f, 1.0f)),       //velocity
 	Stuck(true), firsPos(pos) { }
 
-void ObstacleObject::Move(ObstacleObject* obstacle, bool isBird)
+void ObstacleObject::Move(ObstacleObject* obstacle, bool isStellite)
 {
 	if (!obstacle->Stuck) {
 		obstacle->Position.x -= obstacle->Velocity.x;
@@ -22,7 +22,7 @@ void ObstacleObject::Move(ObstacleObject* obstacle, bool isBird)
 			obstacle->Position.x = 1280.0f;
 			obstacle->Destroyed = false;
 		}
-		if (isBird) {
+		if (isStellite) {
 			int yUp = obstacle->firsPos.y - 200.0f;
 			int yDown = obstacle->firsPos.y + 200.0f;
 			if (up) {

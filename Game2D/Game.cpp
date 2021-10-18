@@ -511,7 +511,7 @@ void Game::BulletsCount()
 void Game::Collisions() {
 	this->CollisionsSatellite();
 	this->CollisionsBullet();
-	this->CollisionsBulletsInBirds();
+	this->CollisionsBulletsInSatellite();
 }
 
 void Game::CollisionsBullet() {
@@ -573,7 +573,7 @@ void Game::CollisionsSatellite() {
 	}
 }
 
-void Game::CollisionsBulletsInBirds() {
+void Game::CollisionsBulletsInSatellite() {
 	for (int i = 0; i < indexBullets; i++) {
 		if (CheckCollision(*Satellite_One, *Bullets[i])) {
 			if (!Satellite_One->Destroyed and !Bullets[i]->Destroyed) {

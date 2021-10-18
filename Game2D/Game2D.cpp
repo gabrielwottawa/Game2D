@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 
 	Game2D.State = GAME_MENU;
 
-	SoundEngine->play2D("audio/breakout.mp3", true);
+	//SoundEngine->play2D("audio/breakout.mp3", true);
 
 	int cooldown = 0;
 	int tick = 0;
