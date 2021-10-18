@@ -24,6 +24,7 @@ SpriteRenderer::~SpriteRenderer()
 	glDeleteVertexArrays(1, &this->quadVAO);
 }
 
+//Usada para texturas estáticas
 void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec2 position, GLfloat z, glm::vec2 size, GLfloat rotate, glm::vec3 color)
 {
 	this->shader.Use();
@@ -48,6 +49,7 @@ void SpriteRenderer::DrawSprite(Texture2D& texture, glm::vec2 position, GLfloat 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+//Usada para texturas com animação
 void SpriteRenderer::DrawSpritePlayer(Texture2D& texture, glm::vec2 position, GLfloat z, glm::vec2 size, GLfloat rotate, glm::vec3 color)
 {
 	this->shader.Use();
@@ -81,7 +83,7 @@ void SpriteRenderer::DrawSpritePlayer(Texture2D& texture, glm::vec2 position, GL
 
 void SpriteRenderer::initRenderData()
 {
-	// Configure VAO/VBO
+	// Configuração VAO/VBO
 	GLuint VBO;
 	GLfloat vertices[] = {
 		// Pos      // Tex

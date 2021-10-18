@@ -43,7 +43,9 @@ PlayerObject* Bullets[MAX_INDEX];
 ObstacleObject* Satellite_One;
 ObstacleObject* Satellite_Two;
 ObstacleObject* Satellite_Three;
+ObstacleObject* Satellite_Four;
 ObstacleObject* Bullet;
+ObstacleObject* Bullet_Two;
 ObstacleObject* Cooldown;
 
 GameObject* LifeBar;
@@ -100,13 +102,15 @@ void Game::SetSpriteRenderer()
 void Game::SetBullet()
 {
 	Bullet = new ObstacleObject(glm::vec2(((this->Width / 5) * 11), 300), glm::vec2(50, 150), Resource::GetTexture("Bullet_Up"));
+	Bullet_Two = new ObstacleObject(glm::vec2(((this->Width / 5) * 17), 300), glm::vec2(50, 150), Resource::GetTexture("Bullet_Up"));
 }
 
 void Game::SetSatellite()
 {
 	Satellite_One = new ObstacleObject(glm::vec2(((this->Width / 10) * 9), 100), glm::vec2(80, 80), Resource::GetTexture("Satellite"));
 	Satellite_Two = new ObstacleObject(glm::vec2(((this->Width / 10) * 17), 120), glm::vec2(65, 60), Resource::GetTexture("Satellite"));
-	Satellite_Three = new ObstacleObject(glm::vec2(((this->Width / 10) * 7), 170), glm::vec2(70, 50), Resource::GetTexture("Satellite"));
+	Satellite_Three = new ObstacleObject(glm::vec2(((this->Width / 10) * 46), 170), glm::vec2(70, 50), Resource::GetTexture("Satellite_Two"));
+	Satellite_Four = new ObstacleObject(glm::vec2(((this->Width / 10) * 25), 140), glm::vec2(80, 40), Resource::GetTexture("Satellite_Two"));
 }
 
 void Game::SetCoating_One()
@@ -197,6 +201,7 @@ void Game::LoadTextureBullets()
 void Game::LoadTextureSatellite()
 {
 	Resource::LoadTexture("textures/Satellite.png", GL_TRUE, "Satellite");
+	Resource::LoadTexture("textures/Satellite_Two.png", GL_TRUE, "Satellite_Two");
 }
 
 void Game::LoadTextureBackground()
@@ -241,6 +246,7 @@ void Game::Update(GLfloat dt)
 void Game::MoveBullet()
 {
 	Bullet->Move(Bullet, false);
+	Bullet_Two->Move(Bullet_Two, false);
 }
 
 void Game::MoveSpaceship()
@@ -248,6 +254,7 @@ void Game::MoveSpaceship()
 	Satellite_One->Move(Satellite_One, true);
 	Satellite_Two->Move(Satellite_Two, true);
 	Satellite_Three->Move(Satellite_Three, true);
+	Satellite_Four->Move(Satellite_Four, true);
 }
 
 void Game::MoveGround()
@@ -382,7 +389,9 @@ void Game::InitializeObjects()
 	Satellite_One->Stuck = false;
 	Satellite_Two->Stuck = false;
 	Satellite_Three->Stuck = false;
+	Satellite_Four->Stuck = false;
 	Bullet->Stuck = false;
+	Bullet_Two->Stuck = false;
 	Cooldown->Stuck = false;
 }
 
@@ -417,6 +426,8 @@ void Game::Render()
 		this->BulletsCount();
 		if (bullets != 0)
 			BulletCount->Draw(*Renderer, 0.2f);
+		if (bullets != 0)
+			BulletCount->Draw(*Renderer, 0.2f);
 
 		// Health Bar
 		this->NumberLifes();
@@ -429,17 +440,21 @@ void Game::Render()
 		// Cooldown
 		Cooldown->Draw(*Renderer, 0.2f);
 
-		// Number Birds
+		// Number Satellite
 		if (!Satellite_One->Destroyed)
 			Satellite_One->Draw(*Renderer, 0.03f);
 		if (!Satellite_Two->Destroyed)
 			Satellite_Two->Draw(*Renderer, 0.03f);
 		if (!Satellite_Three->Destroyed)
 			Satellite_Three->Draw(*Renderer, 0.03f);
+		if (!Satellite_Four->Destroyed)
+			Satellite_Four->Draw(*Renderer, 0.03f);
 
 		// Bala Up
 		if (!Bullet->Destroyed)
 			Bullet->Draw(*Renderer, 0.02f);
+		if (!Bullet_Two->Destroyed)
+			Bullet_Two->Draw(*Renderer, 0.02f);
 
 		// Player
 		Spaceship->DrawPlayer(*RendererPlayer, 0.2f);
@@ -494,7 +509,7 @@ void Game::BulletsCount()
 
 
 void Game::Collisions() {
-	this->CollisionsBirds();
+	this->CollisionsSatellite();
 	this->CollisionsBullet();
 	this->CollisionsBulletsInBirds();
 }
@@ -511,9 +526,19 @@ void Game::CollisionsBullet() {
 			points += 5;
 		}
 	}
+	else if (CheckCollision(*Spaceship, *Bullet_Two))
+	{
+		if (!Bullet_Two->Destroyed) {
+			Bullet_Two->Destroyed = true;
+			if (bullets < 6)
+				bullets += 1;
+			SoundEngine2->play2D("audio/powerup.mp3", false);
+			points += 5;
+		}
+	}
 }
 
-void Game::CollisionsBirds() {
+void Game::CollisionsSatellite() {
 	if (CheckCollision(*Spaceship, *Satellite_One))
 	{
 		if (!Satellite_One->Destroyed) {
@@ -534,6 +559,14 @@ void Game::CollisionsBirds() {
 	{
 		if (!Satellite_Three->Destroyed) {
 			Satellite_Three->Destroyed = true;
+			numLifes -= 1;
+			SoundEngine2->play2D("audio/health.mp3", false);
+		}
+	}
+	else if (CheckCollision(*Spaceship, *Satellite_Four))
+	{
+		if (!Satellite_Four->Destroyed) {
+			Satellite_Four->Destroyed = true;
 			numLifes -= 1;
 			SoundEngine2->play2D("audio/health.mp3", false);
 		}
@@ -561,6 +594,14 @@ void Game::CollisionsBulletsInBirds() {
 		else if (CheckCollision(*Satellite_Three, *Bullets[i])) {
 			if (!Satellite_Three->Destroyed and !Bullets[i]->Destroyed) {
 				Satellite_Three->Destroyed = true;
+				Bullets[i]->Destroyed = true;
+				SoundEngine2->play2D("audio/destroy.mp3", false);
+				points += 15;
+			}
+		}
+		else if (CheckCollision(*Satellite_Four, *Bullets[i])) {
+			if (!Satellite_Four->Destroyed and !Bullets[i]->Destroyed) {
+				Satellite_Four->Destroyed = true;
 				Bullets[i]->Destroyed = true;
 				SoundEngine2->play2D("audio/destroy.mp3", false);
 				points += 15;

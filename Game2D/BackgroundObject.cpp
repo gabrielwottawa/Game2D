@@ -8,13 +8,6 @@ BackgroundObject::BackgroundObject(glm::vec2 pos, glm::vec2 size, Texture2D spri
 		velocity),					//velocity
 	Stuck(true) { }
 
-void BackgroundObject::Reset(glm::vec2 position, glm::vec2 velocity)
-{
-	this->Position = position;
-	this->Velocity = velocity;
-	this->Stuck = true;
-}
-
 void BackgroundObject::Move(BackgroundObject* background)
 {
 	if (!background->Stuck) {

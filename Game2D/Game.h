@@ -63,7 +63,7 @@ public:
 	void BulletsCount();
 	void Collisions();
 	void CollisionsBullet();
-	void CollisionsBirds();
+	void CollisionsSatellite();
 	void CollisionsBulletsInBirds();
 	GLboolean CheckCollision(GameObject& one, GameObject& two);
 };

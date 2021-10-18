@@ -42,10 +42,3 @@ void ObstacleObject::Move(ObstacleObject* obstacle, bool isBird)
 		}
 	}
 }
-
-void ObstacleObject::Reset(glm::vec2 position, glm::vec2 velocity)
-{
-	this->Position = position;
-	this->Velocity = velocity;
-	this->Stuck = true;
-}

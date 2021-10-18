@@ -18,10 +18,7 @@ public:
 	GLboolean Stuck;
 	// Constructor(s)
 	BackgroundObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite, glm::vec2 velocity);
-	// Moves the ball, keeping it constrained within the window bounds (except bottom edge); returns new position
 	void Move(BackgroundObject* background);
-	// Resets the ball to original state with given position and velocity
-	void      Reset(glm::vec2 position, glm::vec2 velocity);
 };
 
 #endif
